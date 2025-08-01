@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Mondrian Portfolio</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    .mondrian-container {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100vh;
+    }
+
+    .intro {
+      position: absolute;
+      text-align: center;
+      padding: 1rem;
+      z-index: 1;
+      pointer-events: none;
+      display: none;
+      box-sizing: border-box;
+    }
+
+    .intro-content {
+      pointer-events: auto;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      margin: 0;
+      transition: all 0.3s ease;
+    }
+
+    h2 {
+      font-weight: 300;
+      margin-top: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .buttons {
+      margin-top: 2rem;
+      pointer-events: auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    button {
+      margin: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border: none;
+      background: black;
+      color: white;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.2s ease;
+    }
+
+    button:hover {
+      background: #333;
+    }
+
+    .content-container {
+      background: white;
+    }
+
+    section {
+      padding: 4rem 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .section-title:after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 100px;
+      height: 4px;
+      background: black;
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 30px;
+    }
+
+    .timeline:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 10px;
+      width: 2px;
+      background: #ddd;
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 2rem;
+    }
+
+    .timeline-item:before {
+      content: '';
+      position: absolute;
+      left: -30px;
+      top: 5px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #000;
+    }
+
+    .timeline-date {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-title {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .project-card {
+      border: 1px solid #eee;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .project-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .project-image {
+      height: 200px;
+      background: #f5f5f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .project-content {
+      padding: 1.5rem;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .contact-link {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.75rem 1.5rem;
+      background: #f5f5f5;
+      border-radius: 4px;
+      text-decoration: none;
+      color: #333;
+      transition: all 0.2s ease;
+    }
+
+    .contact-link:hover {
+      background: #000;
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .section-title {
+        font-size: 2rem;
+      }
+      
+      section {
+        padding: 3rem 1.5rem;
+      }
+      
+      .project-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .intro {
+        padding: 0.5rem; /* Reduced padding for mobile */
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="mondrian-container">
+    <canvas id="mondrian"></canvas>
+    <div class="intro" id="intro">
+      <div class="intro-content">
+        <h1>Ernesto Araiza</h1>
+        <h2>Creative Developer & Designer</h2>
+        <div class="buttons">
+          <button onclick="drawMondrian()">🎲 New layout</button>
+          <button onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">⬇ Explore</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-container">
+    <section id="about">
+      <h2 class="section-title">About Me</h2>
+      <p>I'm a creative developer and designer with a passion for building beautiful, functional digital experiences. My background combines technical expertise with artistic sensibility, allowing me to bridge the gap between design and development.</p>
+    </section>
+
+    <section id="projects">
+      <h2 class="section-title">Projects</h2>
+      <div class="project-grid">
+        <div class="project-card">
+          <div class="project-image">Project Image</div>
+          <div class="project-content">
+            <h3>Project Title</h3>
+            <p>Project description and details.</p>
+          </div>
+        </div>
+        <div class="project-card">
+          <div class="project-image">Project Image</div>
+          <div class="project-content">
+            <h3>Project Title</h3>
+            <p>Project description and details.</p>
+          </div>
+        </div>
+        <div class="project-card">
+          <div class="project-image">Project Image</div>
+          <div class="project-content">
+            <h3>Project Title</h3>
+            <p>Project description and details.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="experience">
+      <h2 class="section-title">Experience</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-date">2021 - Present</div>
+          <div class="timeline-title">Senior Developer</div>
+          <div class="timeline-company">Creative Agency</div>
+          <p>Lead developer responsible for building interactive web experiences.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">2018 - 2021</div>
+          <div class="timeline-title">Frontend Developer</div>
+          <div class="timeline-company">Tech Startup</div>
+          <p>Developed responsive web applications and UI components.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">2016 - 2018</div>
+          <div class="timeline-title">Designer & Developer</div>
+          <div class="timeline-company">Freelance</div>
+          <p>Worked with clients to design and develop custom websites.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2 class="section-title">Contact</h2>
+      <p>Feel free to reach out for collaborations or just to say hello!</p>
+      <div class="contact-links">
+        <a href="mailto:hello@example.com" class="contact-link">✉️ Email</a>
+        <a href="https://github.com/yourusername" target="_blank" class="contact-link">💻 GitHub</a>
+        <a href="https://linkedin.com/in/yourusername" target="_blank" class="contact-link">🔗 LinkedIn</a>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('mondrian');
+    const ctx = canvas.getContext('2d');
+    const intro = document.getElementById('intro');
+    const introH1 = intro.querySelector('h1');
+    const introH2 = intro.querySelector('h2');
+    const introButtons = intro.querySelector('.buttons');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      drawMondrian();
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function drawMondrian() {
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      // Start with white background
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, w, h);
+
+      // Adjust grid complexity based on screen size
+      const isMobile = window.innerWidth < 768;
+      const cols = isMobile ? 
+        Math.floor(Math.random() * 2) + 1 : // 3-4 columns on mobile
+        Math.floor(Math.random() * 3) + 4;  // 4-6 columns on desktop
+      const rows = isMobile ?
+        Math.floor(Math.random() * 2) + 1 : // 2-3 rows on mobile
+        Math.floor(Math.random() * 3) + 3;  // 3-5 rows on desktop
+
+      const xPoints = [0];
+      const yPoints = [0];
+
+      // Generate random x division points
+      for (let i = 0; i < cols; i++) {
+        const remainingWidth = w - xPoints[xPoints.length - 1];
+        const minWidth = Math.max(50, remainingWidth / (cols - i) * 0.7);
+        const maxWidth = remainingWidth / (cols - i) * 1.3;
+        xPoints.push(Math.floor(Math.random() * (maxWidth - minWidth) + minWidth) + xPoints[xPoints.length - 1]);
+      }
+      xPoints[xPoints.length - 1] = w;
+
+      // Generate random y division points
+      for (let i = 0; i < rows; i++) {
+        const remainingHeight = h - yPoints[yPoints.length - 1];
+        const minHeight = Math.max(50, remainingHeight / (rows - i) * 0.7);
+        const maxHeight = remainingHeight / (rows - i) * 1.3;
+        yPoints.push(Math.floor(Math.random() * (maxHeight - minHeight) + minHeight) + yPoints[yPoints.length - 1]);
+      }
+      yPoints[yPoints.length - 1] = h;
+
+      const colors = ["#FF0000", "#0000FF", "#FFFF00", "#ffffff"];
+      let largestRect = null;
+      let largestArea = 0;
+      let largestRectColor = "#ffffff";
+
+      // First pass: find the largest rectangle
+      for (let i = 0; i < xPoints.length - 1; i++) {
+        for (let j = 0; j < yPoints.length - 1; j++) {
+          const x = xPoints[i];
+          const y = yPoints[j];
+          const rectW = xPoints[i + 1] - x;
+          const rectH = yPoints[j + 1] - y;
+          const area = rectW * rectH;
+
+          if (area > largestArea) {
+            largestArea = area;
+            largestRect = { x, y, w: rectW, h: rectH };
+          }
+        }
+      }
+
+      // Second pass: draw all rectangles and determine largest rectangle's color
+      for (let i = 0; i < xPoints.length - 1; i++) {
+        for (let j = 0; j < yPoints.length - 1; j++) {
+          const x = xPoints[i];
+          const y = yPoints[j];
+          const rectW = xPoints[i + 1] - x;
+          const rectH = yPoints[j + 1] - y;
+
+          // Check if this is our largest rectangle
+          const isLargest = largestRect && x === largestRect.x && y === largestRect.y;
+          
+          // Determine color for this rectangle
+          let rectColor = "#ffffff";
+          const fillChance = Math.random();
+          if (fillChance < 0.3) {
+            rectColor = colors[Math.floor(Math.random() * colors.length)];
+            ctx.fillStyle = rectColor;
+            ctx.fillRect(x, y, rectW, rectH);
+          }
+
+          if (isLargest) {
+            largestRectColor = rectColor;
+            // Ensure the largest rectangle is always filled (not just outlined)
+            ctx.fillStyle = rectColor;
+            ctx.fillRect(x, y, rectW, rectH);
+          }
+
+          ctx.strokeStyle = "#000000";
+          ctx.lineWidth = isMobile ? 6 : 10; // Thinner lines on mobile
+          ctx.strokeRect(x, y, rectW, rectH);
+        }
+      }
+
+      // Position and style the intro block
+      if (largestRect) {
+        // Padding adjustment - smaller on mobile, larger on desktop
+        const padding = isMobile ? 
+          Math.min(largestRect.w * 0.05, largestRect.h * 0.05, 20) : 
+          Math.min(largestRect.w * 0.1, largestRect.h * 0.1, 30);
+        
+        const availableWidth = largestRect.w - padding * 2;
+        const availableHeight = largestRect.h - padding * 2;
+        
+        // Calculate font sizes based on available space
+        const h1FontSize = Math.min(availableWidth * 0.1, availableHeight * 0.2, isMobile ? 60 : 80);
+        const h2FontSize = h1FontSize * 0.4;
+        const buttonFontSize = h1FontSize * 0.25;
+        
+        // Set text color based on background color
+        const textColor = (largestRectColor === "#FF0000" || largestRectColor === "#0000FF") ? "white" : "black";
+        
+        // Apply styles
+        intro.style.left = largestRect.x + "px";
+        intro.style.top = largestRect.y + "px";
+        intro.style.width = largestRect.w + "px";
+        intro.style.height = largestRect.h + "px";
+        intro.style.padding = padding + "px";
+        intro.style.display = 'flex';
+        
+        introH1.style.fontSize = h1FontSize + "px";
+        introH1.style.color = textColor;
+        introH1.style.lineHeight = h1FontSize + "px";
+        
+        introH2.style.fontSize = h2FontSize + "px";
+        introH2.style.color = textColor;
+        introH2.style.marginTop = (h1FontSize * 0.2) + "px";
+        
+        introButtons.style.marginTop = (h1FontSize * 0.3) + "px";
+        Array.from(introButtons.querySelectorAll('button')).forEach(button => {
+          button.style.fontSize = buttonFontSize + "px";
+          button.style.padding = `${buttonFontSize * 0.75}px ${buttonFontSize * 1.5}px`;
+        });
+      }
+    }
+  </script>
+</body>
+</html>
